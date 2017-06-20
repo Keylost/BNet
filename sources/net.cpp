@@ -26,10 +26,9 @@ bool Net::calculate(double *inputs, double *answer)
 	return true;
 }
 
-double Net::learnExample(trainData &_trainData)
+double Net::learnExample(trainData &_trainData, int maxIt = 3)
 {
 	double error = 0;
-	int maxIt = 3;
 	
 	//загрузить данные во входной слой(просто подставить указатель)
 	inputLayer->signals = _trainData.inputs;
@@ -76,22 +75,30 @@ void Net::train(trainDataCollection &_trainCollection)
 {
 	printf("\n----Training process started-----\n");
 	
+	double bestError = 1000.0;
 	double error = 1;
 	int it = 0, maxIt = 10000000;
 	
-	while (error > 0.01 && it<maxIt) //&& Math.Abs(error - prevError) > 0.00001
+	while (error > 0.0001 && it<maxIt) //&& Math.Abs(error - prevError) > 0.00001
 	{
 		error = 0;
+		double sq = 0;
 		for (unsigned f = 0; f < _trainCollection.size(); f++)
 		{
-			double sq = learnExample(_trainCollection.trainCollection[f]);
-			if(sq>error) error = sq;
+			sq += learnExample(_trainCollection.trainCollection[f], 1);
+			//if(sq>error) error = sq;
 		}
-		error = sqrt(error);
+		error = sqrt(sq/_trainCollection.size());
 		
 		//if(it%25 == 0)
 		{
 			printf("error: %f at iter %d\n", error, it);
+			if(error<bestError)
+			{
+				printf("model saved with bestError at iter %d\n", it);
+				saveModel("../models/model_best.mdl");
+				bestError = error;
+			}
 		}
 		
 		#ifdef _PROFILING_
@@ -154,7 +161,7 @@ void Net::forwardPropagation()
 
 void Net::backPropagation()
 {
-	double learnSpeed = 0.5; //скорость обучения !!!TODO: переместить в класс
+	double learnSpeed = 0.8; //скорость обучения !!!TODO: переместить в класс
 	Link *currentLink;
 	
 	memcpy(outputLayer->deltas,outputLayer->errors, outputLayer->neuronsCount*sizeof(double));

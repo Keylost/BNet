@@ -62,7 +62,7 @@ class Net
 	 * Учит пример записанный в _trainData
 	 * Возвращает ошибку сети на этом примере
 	 */
-	double learnExample(trainData& _trainData); //returns error on this example
+	double learnExample(trainData& _trainData, int maxIt); //returns error on this example
 	
 	/*
 	 * Производит распространение входных сигналов (inputs)
