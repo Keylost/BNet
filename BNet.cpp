@@ -2,7 +2,6 @@
 #include "trainDataCollection.hpp"
 #include "net.hpp"
 #include "timer.hpp"
-
 #include <opencv2/opencv.hpp>
 
 using namespace std;

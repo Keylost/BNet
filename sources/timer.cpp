@@ -5,7 +5,7 @@
  */
 void RTimer::start()
 {
-	clock_gettime(CLOCK_REALTIME, &tstart);
+	ftime(&tstart);
 }
 
 /*
@@ -13,31 +13,27 @@ void RTimer::start()
  */
 void RTimer::stop()
 {
-	clock_gettime(CLOCK_REALTIME, &tend);
+	ftime(&tend);
 }
 
 /*
  * Функция get() возвращает время в миллисекундах между вызовами start() и stop()
  */
-size_t RTimer::get(RTimerTicks tt)
+long unsigned RTimer::get(RTimerTicks tt)
 {
 	switch(tt)
 	{
 		case rtimer_sec: //seconds
 		{
-			return ((tend.tv_sec-tstart.tv_sec) + (tend.tv_nsec-tstart.tv_nsec)/1000000000);
+			return ((tend.time - tstart.time) + round((tend.millitm - tstart.millitm)/1000.0));
 		}
 		case rtimer_ms: //milliseconds
 		{
-			return ((tend.tv_sec-tstart.tv_sec)*1000 + (tend.tv_nsec-tstart.tv_nsec)/1000000);
-		}
-		case rtimer_us: //microseconds
-		{
-			return ((tend.tv_sec-tstart.tv_sec)*1000000 + (tend.tv_nsec-tstart.tv_nsec)/1000);
+			return (1000.0 * (tend.time - tstart.time) + (tend.millitm - tstart.millitm));
 		}
 		default: //return time in ms by default
 		{
-			return ((tend.tv_sec-tstart.tv_sec)*1000 + (tend.tv_nsec-tstart.tv_nsec)/1000000);
+			return (1000.0 * (tend.time - tstart.time) + (tend.millitm - tstart.millitm));
 		}
 	}	
 }

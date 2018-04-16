@@ -40,7 +40,7 @@ double Net::learnExample(trainData &_trainData, int maxIt = 3)
 		tm.start();
 		forwardPropagation();
 		tm.stop();
-		avgFwd += tm.get(rtimer_us);		
+		avgFwd += tm.get(rtimer_ms);		
 		#else
 		forwardPropagation();
 		#endif
@@ -56,7 +56,7 @@ double Net::learnExample(trainData &_trainData, int maxIt = 3)
 		tm.start();
 		backPropagation();
 		tm.stop();
-		avgBkw += tm.get(rtimer_us);		
+		avgBkw += tm.get(rtimer_ms);		
 		#else
 		backPropagation();
 		#endif
@@ -102,8 +102,8 @@ void Net::train(trainDataCollection &_trainCollection)
 		}
 		
 		#ifdef _PROFILING_
-		printf("Forward propagation - %f us\n",(double)avgFwd/(3*_trainCollection.size()));
-		printf("Backward propagation - %f us\n",(double)avgBkw/(3*_trainCollection.size()));
+		printf("Forward propagation - %f ms\n",(double)avgFwd/(3*_trainCollection.size()));
+		printf("Backward propagation - %f ms\n",(double)avgBkw/(3*_trainCollection.size()));
 		avgFwd = 0;
 		avgBkw = 0;
 		#endif
@@ -516,7 +516,7 @@ void Net::runTest(trainDataCollection &_trainCollection)
 		
 		sumTime_sec += tm.get(rtimer_sec);
 		sumTime_ms  += tm.get(rtimer_ms);
-		sumTime_us  += tm.get(rtimer_us);
+		//sumTime_us  += tm.get(rtimer_us);
 		
 		for(int i=0;i<outputLayer->neuronsCount;i++)
 		{
@@ -534,7 +534,7 @@ void Net::runTest(trainDataCollection &_trainCollection)
 	printf("Average error:      %f\n", sumError/(double)_trainCollection.size());
 	printf("Average time(sec):  %f\n", sumTime_sec/(double)_trainCollection.size());
 	printf("Average time(ms):   %f\n", sumTime_ms/(double)_trainCollection.size());
-	printf("Average time(us):   %f\n", sumTime_us/(double)_trainCollection.size());
+	//printf("Average time(us):   %f\n", sumTime_us/(double)_trainCollection.size());
 	
 	return;
 }
